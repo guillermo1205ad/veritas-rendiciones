@@ -9,21 +9,23 @@ const LinkedInIcon = ({ className = "w-3 h-3" }: { className?: string }) => (
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-slate-950 border-t border-slate-800 text-slate-400 text-sm py-12">
+    <footer className="bg-[#05070c] border-t border-white/[0.06] text-slate-400 text-sm py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-14">
           
           {/* Brand & Mission */}
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-sky-500 flex items-center justify-center text-white">
-                <ShieldCheck className="w-5 h-5" />
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-sky-400 p-[1px] shadow-md shadow-indigo-500/20">
+                <div className="w-full h-full bg-[#0a0d16] rounded-[11px] flex items-center justify-center">
+                  <ShieldCheck className="w-5 h-5 text-indigo-400" />
+                </div>
               </div>
               <div>
-                <span className="font-extrabold text-lg tracking-tight text-white font-mono">
+                <span className="font-extrabold text-xl tracking-tight text-white font-mono">
                   VÉRITAS
                 </span>
-                <span className="text-xs text-indigo-400 block -mt-1 font-medium">
+                <span className="text-[11px] text-indigo-400 block -mt-1 font-medium tracking-tight">
                   Preauditoría & Rendiciones de Proyectos
                 </span>
               </div>
@@ -31,22 +33,22 @@ export const Footer: React.FC = () => {
             <p className="text-xs sm:text-sm text-slate-400 max-w-md leading-relaxed">
               No vendemos licencias de software: gestionamos y blindamos las rendiciones financieras de empresas, universidades y fundaciones con un equipo experto de consultores, Grafos de Conocimiento e Inteligencia Artificial Multimodal.
             </p>
-            <div className="flex items-center gap-3 text-xs text-slate-500 font-mono">
-              <span className="flex items-center gap-1">
+            <div className="flex items-center gap-3 text-xs text-slate-500 font-mono pt-2">
+              <span className="flex items-center gap-1.5 text-slate-400">
                 <Database className="w-3.5 h-3.5 text-emerald-400" />
                 PostgreSQL 16 Relacional & Grafos
               </span>
               <span>•</span>
-              <span>Reglas CORFO / ANID / FIA</span>
+              <span className="text-slate-400">Reglas CORFO / ANID / FIA</span>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-4">
+            <h4 className="text-[11px] font-bold text-white uppercase tracking-widest font-mono mb-4">
               Navegación
             </h4>
-            <ul className="space-y-2 text-xs">
+            <ul className="space-y-2.5 text-xs text-slate-400">
               <li>
                 <a href="#propuesta" className="hover:text-white transition-colors">
                   Propuesta de Valor
@@ -69,7 +71,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <a href="#consultores" className="hover:text-white transition-colors">
-                  Equipo Consultor
+                  Socios Consultores
                 </a>
               </li>
               <li>
@@ -82,18 +84,18 @@ export const Footer: React.FC = () => {
 
           {/* Founders & Contact */}
           <div>
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-4">
+            <h4 className="text-[11px] font-bold text-white uppercase tracking-widest font-mono mb-4">
               Socios Consultores
             </h4>
-            <div className="space-y-3 text-xs">
+            <div className="space-y-4 text-xs">
               <div>
                 <div className="font-semibold text-white">Guillermo Peralta</div>
-                <div className="text-slate-400 text-[11px]">Ing. Comercial · M.Sc. · Dr. (c) Cs. Computación</div>
+                <div className="text-slate-400 text-[11px] mt-0.5">Ing. Comercial · M.Sc. · Dr. (c) Cs. Computación</div>
                 <a
                   href="https://www.linkedin.com/in/guillermo-peralta/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-indigo-400 hover:text-indigo-300 inline-flex items-center gap-1 mt-0.5 text-[11px]"
+                  className="text-indigo-400 hover:text-indigo-300 inline-flex items-center gap-1 mt-1 text-[11px] font-medium"
                 >
                   <LinkedInIcon className="w-3 h-3 text-[#0a66c2]" />
                   <span>Ver perfil de LinkedIn</span>
@@ -101,14 +103,14 @@ export const Footer: React.FC = () => {
                 </a>
               </div>
 
-              <div className="pt-2 border-t border-slate-900">
+              <div className="pt-3 border-t border-white/[0.06]">
                 <div className="font-semibold text-white">Matías Cotroneo Urriola</div>
-                <div className="text-slate-400 text-[11px]">Ing. Comercial · M.Sc. Ciencias Empresariales</div>
+                <div className="text-slate-400 text-[11px] mt-0.5">Ing. Comercial · M.Sc. Ciencias Empresariales</div>
                 <a
                   href="https://www.linkedin.com/in/matias-cotroneo-urriola-6368861a8/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sky-400 hover:text-sky-300 inline-flex items-center gap-1 mt-0.5 text-[11px]"
+                  className="text-sky-400 hover:text-sky-300 inline-flex items-center gap-1 mt-1 text-[11px] font-medium"
                 >
                   <LinkedInIcon className="w-3 h-3 text-[#0a66c2]" />
                   <span>Ver perfil de LinkedIn</span>
@@ -121,14 +123,14 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div className="pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div>
             © {new Date().getFullYear()} VÉRITAS Preauditoría & Rendiciones. Todos los derechos reservados.
           </div>
           <div className="flex items-center gap-4">
             <span>Acuerdo de Confidencialidad (NDA) Estricto</span>
             <span>•</span>
-            <span>Chile</span>
+            <span>Santiago, Chile</span>
           </div>
         </div>
 
