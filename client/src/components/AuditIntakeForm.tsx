@@ -1,4 +1,7 @@
-import { ArrowRight, ArrowUpRight, Mail, Plus } from 'lucide-react';
+import { useState } from 'react';
+import type { FormEvent } from 'react';
+import { ArrowRight, ArrowUpRight, Mail, Plus, CircleAlert, LoaderCircle } from 'lucide-react';
+import { sendConsultation, consultationMailto } from '../lib/contact-delivery';
 import './contact.css';
 
 const nextSteps = [
@@ -8,6 +11,25 @@ const nextSteps = [
 ];
 
 export function AuditIntakeForm() {
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState(false);
+  const [fallbackEmail, setFallbackEmail] = useState('mailto:guillermo1205ad@gmail.com');
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (sending) return;
+    const data = new FormData(event.currentTarget);
+    setFallbackEmail(consultationMailto(data));
+    setSending(true);
+    setSendError(false);
+    try {
+      await sendConsultation(data);
+      window.location.assign(new URL('gracias.html', window.location.href).href);
+    } catch {
+      setSendError(true);
+    } finally {
+      setSending(false);
+    }
+  }
   return (
     <section id="contacto" className="contact-section" aria-labelledby="contact-heading">
       <div className="contact-layout">
@@ -41,7 +63,7 @@ export function AuditIntakeForm() {
             <h3>Empecemos por conocerte.</h3>
             <p>Completa tus datos y cuéntanos sobre tu proyecto.</p>
           </div>
-          <form action="https://formsubmit.co/guillermo1205ad@gmail.com" method="POST" className="contact-form" aria-describedby="contact-privacy">
+          <form action="https://formsubmit.co/guillermo1205ad@gmail.com" method="POST" onSubmit={handleSubmit} className="contact-form" aria-describedby="contact-privacy">
             <input type="hidden" name="_subject" value="Nueva consulta · Veritas Rendiciones" />
             <input type="hidden" name="_template" value="table" />
             <input type="hidden" name="_url" value="https://guillermo1205ad.github.io/veritas-rendiciones/" />
@@ -109,7 +131,8 @@ export function AuditIntakeForm() {
                 </div>
               </div>
             </details>
-            <button className="contact-submit" type="submit">Solicitar mi diagnóstico <ArrowRight size={19} aria-hidden="true" /></button>
+            {sendError && <div className="contact-error" role="alert"><CircleAlert size={18} aria-hidden="true"/><div><strong>No pudimos confirmar el envío.</strong><p>Tus datos siguen aquí. Puedes volver a intentarlo o enviarnos la consulta desde tu correo.</p><a href={fallbackEmail}>Abrir mi correo con esta consulta <ArrowUpRight size={14}/></a><small>Revisa el mensaje y pulsa Enviar en tu aplicación de correo.</small></div></div>}
+            <button className="contact-submit" type="submit" disabled={sending}>{sending ? <>Enviando tu consulta <LoaderCircle size={19} aria-hidden="true" /></> : <>Solicitar mi diagnóstico <ArrowRight size={19} aria-hidden="true" /></>}</button>
             <p id="contact-privacy" className="contact-privacy">
               Los campos con * son obligatorios. Usaremos estos datos para responder a tu consulta.
               Evita incluir información sensible o documentos de tu proyecto.

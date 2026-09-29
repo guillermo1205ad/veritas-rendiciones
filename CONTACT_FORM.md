@@ -1,48 +1,42 @@
-# Formulario de contacto
+# Formulario de contacto VÉRITAS
 
-El formulario de `client/src/components/AuditIntakeForm.tsx` envía consultas por POST HTML a FormSubmit, con destinatario `guillermo1205ad@gmail.com`. Funciona desde GitHub Pages sin un servidor propio para procesar el correo. No guarda consultas en el navegador ni muestra una confirmación local cuando el envío falla.
+Destinatario: `guillermo1205ad@gmail.com`.
 
-## Activación inicial obligatoria
+## Estado verificado el 29 de septiembre de 2026
 
-1. Publicar el sitio y comprobar que `https://guillermo1205ad.github.io/veritas-rendiciones/gracias.html` carga correctamente.
-2. Abrir el formulario en la URL pública y realizar un envío de prueba claramente identificado, usando datos de prueba no sensibles y un correo del responsable del sitio.
-3. Revisar `guillermo1205ad@gmail.com`, incluida la carpeta de spam, y abrir el correo de activación enviado por FormSubmit.
-4. Pulsar el enlace de activación del formulario. Este paso debe realizarlo una persona con acceso al correo.
-5. Enviar una segunda consulta de prueba desde el sitio publicado y comprobar que llega a Gmail con todos sus campos. Verificar también que responder al correo usa la dirección introducida en el campo `email`.
+El rediseño se publicó y se verificó en GitHub Pages. La integración inicial con FormSubmit devolvió HTTP 500 tanto en el POST nativo desde el sitio como en su API AJAX. **No se ha confirmado activación ni entrega de correo.** No afirmar que la recepción automática está operativa.
 
-La configuración por sí sola no confirma la activación ni la entrega a Gmail. Una página de agradecimiento o una respuesta del servicio tampoco demuestra recepción en la bandeja de entrada. Hasta completar esos pasos, describir el estado como «configurado, pendiente de activación y prueba de recepción».
+Se dejó preparada una alternativa con Web3Forms, pendiente de la clave pública del formulario asociado al correo del propietario. Crear la cuenta/formulario y aceptar los términos del proveedor requiere participación del propietario.
 
-## Configuración y comportamiento
+## Comportamiento publicado
 
-- `action`: `https://formsubmit.co/guillermo1205ad@gmail.com`
-- `method`: `POST`; el navegador realiza el envío y el servicio gestiona sus errores.
-- `email`: nombre reservado para que FormSubmit configure la dirección de respuesta con el correo de quien consulta.
-- `_subject`: `Nueva consulta · Veritas Rendiciones`.
-- `_template`: `table`, para una lectura ordenada en el correo.
-- `_url`: URL pública completa del formulario.
-- `_next`: URL pública absoluta de `gracias.html`. La página se encuentra en `client/public` y Vite la copia al directorio de publicación.
-- `_honey`: campo invisible que ayuda a filtrar bots.
-- reCAPTCHA permanece habilitado por defecto. No se incluye `_captcha=false`.
-- Solo nombre, correo y organización son obligatorios. Los selectores no tienen un organismo o presupuesto preseleccionado.
-- La página de agradecimiento no promete entrega confirmada, un plazo de respuesta ni acuerdos legales.
+- El envío se realiza desde el navegador con respuesta JSON y un plazo máximo de 20 segundos.
+- Solo se navega a `gracias.html` cuando el proveedor devuelve HTTP correcto y `success: true` o `success: "true"`.
+- Ante error HTTP, respuesta inválida, error de red o timeout, los datos se conservan en el formulario. No se almacenan en localStorage.
+- Se muestra un aviso y un enlace que abre el cliente de correo con la consulta completada. **La persona debe pulsar Enviar en su aplicación de correo.** Abrir el borrador no envía nada.
+- El campo `email` identifica el correo de respuesta del interesado. Los tres campos obligatorios son nombre, correo y organización. El resto es opcional.
+- Se usa un campo señuelo contra bots. El envío AJAX utiliza la protección que ofrece el proveedor; no presenta el reCAPTCHA del flujo nativo.
 
-Si el servicio no permite completar un envío, el visitante puede volver al formulario o escribir mediante el enlace directo al correo. Si el navegador no carga el sitio desde un servidor web, FormSubmit puede rechazar el envío; hacer las pruebas finales en la URL de GitHub Pages.
+## Activar Web3Forms
 
-Al cambiar el destinatario, es necesaria una nueva activación. Si cambia el dominio o la ruta de publicación, actualizar `_url` y `_next`. FormSubmit entrega tras la activación un identificador alternativo que puede sustituir el correo visible en `action`; este cambio es opcional y debe verificarse con otra prueba.
+1. El propietario crea un formulario en https://web3forms.com utilizando `guillermo1205ad@gmail.com` y verifica el correo.
+2. Copiar la **Access Key pública del formulario**, no una contraseña ni una credencial privada.
+3. Crear `client/.env.local` con `VITE_WEB3FORMS_ACCESS_KEY=CLAVE_PUBLICA`. El ejemplo está en `client/.env.example`.
+4. Compilar y publicar. La clave del formulario es pública por diseño y se incluye en el frontend. No permite leer Gmail.
+5. Enviar una consulta de prueba desde el sitio publicado y verificar su llegada a Gmail, los campos y la dirección de respuesta.
 
-## Comprobaciones antes de declarar el formulario operativo
+Sin esa variable se utiliza `https://formsubmit.co/ajax/guillermo1205ad@gmail.com`. Si se opta por FormSubmit cuando se restablezca, su correo de activación debe confirmarse antes de verificar entrega. No cambiar a un proveedor adicional automáticamente ni reenviar consultas fallidas a múltiples servicios.
 
-- Validación nativa de los tres campos obligatorios y de la sintaxis del correo.
-- Todos los campos que deben enviarse tienen `name`.
-- Navegación con teclado y apertura de «Agregar datos del proyecto».
-- Ausencia de almacenamiento local de consultas o confirmaciones simuladas.
-- Publicación de `gracias.html`, activación del destinatario y recepción real de una consulta de prueba.
+## Pruebas
 
-## Fuentes oficiales
+- `npm --prefix client run build`: TypeScript y compilación de producción.
+- `npm --prefix client test`: 7 pruebas de respuestas exitosas, fallos, timeout, campos enviados, alternativa Web3Forms, honeypot y correo de respaldo.
+- Navegador: campos obligatorios, correo inválido, conservación de datos ante fallo real, campos opcionales, menú móvil y ausencia de desbordes a 320 y 390 px.
+- La página `gracias.html` es una confirmación visual, no una prueba de entrega en la bandeja del propietario.
 
-- [Configuración inicial y activación](https://formsubmit.co/)
-- [Campos especiales, reCAPTCHA y honeypot](https://formsubmit.co/documentation)
-- [Problemas de activación y entrega](https://formsubmit.co/help)
-- [Política del proveedor](https://formsubmit.co/privacy.pdf)
+## Referencias oficiales
 
-No se realizaron envíos al implementar estos archivos. La activación y recepción deben verificarse por separado.
+- https://formsubmit.co/documentation
+- https://formsubmit.co/ajax-documentation
+- https://docs.web3forms.com/getting-started/installation
+- https://docs.web3forms.com/getting-started/faq

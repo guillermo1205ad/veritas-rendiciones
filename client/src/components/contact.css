@@ -89,3 +89,5 @@
 @media (prefers-reduced-motion: reduce) {
   .contact-section *, .contact-section *::before, .contact-section *::after { transition: none; }
 }
+
+.contact-error{display:flex;gap:10px;padding:16px;background:#faf0e4;border:1px solid #e4c9a6;border-radius:6px;color:#6e4f2b}.contact-error>svg{flex-shrink:0;margin-top:2px}.contact-error strong{display:block;font-size:12px}.contact-error p{font-size:11px;line-height:1.8;margin-top:6px}.contact-error a{display:inline-flex;gap:6px;align-items:center;font-size:11px;font-weight:700;text-decoration:underline;text-underline-offset:3px;margin-top:9px}.contact-error small{display:block;font-size:10px;line-height:1.7;margin-top:7px}.contact-submit:disabled{opacity:.65;cursor:wait;transform:none}

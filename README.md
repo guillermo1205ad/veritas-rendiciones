@@ -1,7 +1,7 @@
 # VÉRITAS | Servicio de Gestión y Preauditoría de Rendiciones de Proyectos
 
 > **Sitio público en React + servicios opcionales en PostgreSQL 16**
-> El formulario público de GitHub Pages envía por FormSubmit a `guillermo1205ad@gmail.com`; requiere activación inicial. Ver [configuración y verificación del formulario](CONTACT_FORM.md). La demostración utiliza datos ilustrativos y no consulta el backend.
+> El formulario público está configurado para enviar a `guillermo1205ad@gmail.com`, con control de errores y alternativa por correo. La entrega automática sigue pendiente de activar un proveedor disponible. Ver [configuración y verificación del formulario](CONTACT_FORM.md). La demostración utiliza datos ilustrativos y no consulta el backend.
 > *Servicio gestionado de acompañamiento, cruce documental y preauditoría mensual para proyectos financiados por CORFO, ANID, FIA, GORE y fondos privados.*
 
 ---
