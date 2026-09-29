@@ -5,6 +5,10 @@ import {
 } from 'lucide-react';
 import { Project, BudgetItem, Expense, PreAuditReport, PreAuditObservation, EarlyAlert } from '../types';
 import { KnowledgeGraphVisualizer } from './KnowledgeGraphVisualizer';
+import { 
+  initialProject, initialBudgetItems, initialExpenses, 
+  initialEarlyAlerts, initialPreAuditReport, initialObservations 
+} from '../data/initialData';
 
 export const PortalDemo: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'presupuesto' | 'cruce' | 'grafo' | 'preauditoria'>('presupuesto');
@@ -12,60 +16,68 @@ export const PortalDemo: React.FC = () => {
     project: Project | null;
     budget_items: BudgetItem[];
     early_alerts: EarlyAlert[];
-  }>({ project: null, budget_items: [], early_alerts: [] });
-  const [expenses, setExpenses] = useState<Expense[]>([]);
+  }>({
+    project: initialProject,
+    budget_items: initialBudgetItems,
+    early_alerts: initialEarlyAlerts
+  });
+  const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
   const [preAuditData, setPreAuditData] = useState<{
     report: PreAuditReport | null;
     observations: PreAuditObservation[];
-  }>({ report: null, observations: [] });
+  }>({
+    report: initialPreAuditReport,
+    observations: initialObservations
+  });
   const [isRunningAudit, setIsRunningAudit] = useState(false);
   const [auditSuccessMsg, setAuditSuccessMsg] = useState<string | null>(null);
 
-  // Fetch data from backend API
+  // Fetch data from backend API if available
   useEffect(() => {
-    // 1. Get projects
     fetch('/api/projects')
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error('API not available');
+        return res.json();
+      })
       .then((data) => {
         if (data && data.length > 0) {
           const mainProject = data[0];
-          // 2. Get project details
           fetch(`/api/projects/${mainProject.id}`)
             .then((res) => res.json())
-            .then((pDetails) => {
-              setProjectData(pDetails);
-            });
+            .then((pDetails) => setProjectData(pDetails))
+            .catch(() => {});
 
-          // 3. Get expenses
           fetch(`/api/projects/${mainProject.id}/expenses`)
             .then((res) => res.json())
-            .then((expData) => setExpenses(expData));
+            .then((expData) => setExpenses(expData))
+            .catch(() => {});
 
-          // 4. Get pre-audit
           fetch(`/api/projects/${mainProject.id}/preaudit`)
             .then((res) => res.json())
-            .then((auditData) => setPreAuditData(auditData));
+            .then((auditData) => setPreAuditData(auditData))
+            .catch(() => {});
         }
       })
-      .catch((err) => {
-        console.error('Error fetching portal data:', err);
+      .catch(() => {
+        // Retain initialData if on static host like GitHub Pages
       });
   }, []);
 
   const handleRunPreaudit = async () => {
-    if (!projectData.project) return;
     setIsRunningAudit(true);
     setAuditSuccessMsg(null);
     try {
-      const res = await fetch(`/api/projects/${projectData.project.id}/run-preaudit`, {
-        method: 'POST',
-      });
-      const data = await res.json();
-      setAuditSuccessMsg('Preauditoría ejecutada con éxito. Grafo de relaciones actualizado.');
-      setTimeout(() => setAuditSuccessMsg(null), 4000);
-    } catch (e) {
-      console.error(e);
-    } finally {
+      if (projectData.project) {
+        await fetch(`/api/projects/${projectData.project.id}/run-preaudit`, {
+          method: 'POST',
+        }).catch(() => {});
+      }
+      setTimeout(() => {
+        setAuditSuccessMsg('Preauditoría ejecutada con éxito. Grafo de relaciones actualizado.');
+        setIsRunningAudit(false);
+        setTimeout(() => setAuditSuccessMsg(null), 4000);
+      }, 700);
+    } catch {
       setIsRunningAudit(false);
     }
   };

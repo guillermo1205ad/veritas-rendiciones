@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: './', // Ensures relative asset paths work on GitHub Pages subpaths
   plugins: [
     react(),
     tailwindcss(),
