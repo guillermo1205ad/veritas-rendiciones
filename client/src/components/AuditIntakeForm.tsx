@@ -1,279 +1,122 @@
-import React, { useState } from 'react';
-import { Send, CheckCircle2, Shield, Calendar, Clock, AlertCircle, Sparkles, Lock } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Mail, Plus } from 'lucide-react';
+import './contact.css';
 
-export const AuditIntakeForm: React.FC = () => {
-  const [formData, setFormData] = useState({
-    organization_name: '',
-    rut: '',
-    contact_name: '',
-    contact_email: '',
-    contact_phone: '',
-    funding_agency: 'CORFO',
-    project_title: '',
-    estimated_budget: '$50.000.000 - $150.000.000',
-    current_situation: ''
-  });
+const nextSteps = [
+  ['Nos cuentas tu situación', 'El organismo, la etapa de tu proyecto y qué necesitas resolver.'],
+  ['Revisamos el punto de partida', 'Conversamos sobre tu documentación, tus plazos y las prioridades.'],
+  ['Definimos cómo acompañarte', 'Te proponemos un alcance de trabajo acorde a tu proyecto.'],
+];
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submittedSuccess, setSubmittedSuccess] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setErrorMessage(null);
-
-    try {
-      const response = await fetch('/api/consultations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-
-      if (response.ok) {
-        setSubmittedSuccess(true);
-      } else {
-        saveToLocalStorage(formData);
-        setSubmittedSuccess(true);
-      }
-    } catch {
-      saveToLocalStorage(formData);
-      setSubmittedSuccess(true);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const saveToLocalStorage = (data: typeof formData) => {
-    try {
-      const existing = JSON.parse(localStorage.getItem('veritas_consultations') || '[]');
-      existing.push({ ...data, date: new Date().toISOString() });
-      localStorage.setItem('veritas_consultations', JSON.stringify(existing));
-    } catch {}
-  };
-
+export function AuditIntakeForm() {
   return (
-    <section id="contacto" className="py-24 bg-[#07090e] border-t border-white/[0.06] relative overflow-hidden">
-      {/* Background radial glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-indigo-600/10 blur-[130px] pointer-events-none rounded-full" />
-
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-4">
-            <Calendar className="w-3.5 h-3.5" />
-            <span>Diagnóstico Preventivo Inicial Sin Costo</span>
-          </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
-            Solicita una Sesión de Diagnóstico
-          </h2>
-          <p className="mt-4 text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
-            Conversemos sobre el estado de tu convenio y presupuesto. Te explicaremos cómo estructuraríamos la matriz de control y la preauditoría de tu carpeta antes de la próxima rendición.
+    <section id="contacto" className="contact-section" aria-labelledby="contact-heading">
+      <div className="contact-layout">
+        <div className="contact-intro">
+          <p className="contact-eyebrow"><span aria-hidden="true" /> HABLEMOS DE TU PROYECTO</p>
+          <h2 id="contact-heading">Tu próximo proyecto merece una <em>rendición clara.</em></h2>
+          <p className="contact-description">
+            Parte con un diagnóstico inicial sin costo. Cuéntanos dónde estás y
+            encontremos el siguiente paso para ordenar tu rendición.
           </p>
+          <ol className="contact-steps">
+            {nextSteps.map(([title, description], index) => (
+              <li key={title}>
+                <span className="contact-step-number" aria-hidden="true">0{index + 1}</span>
+                <div><h3>{title}</h3><p>{description}</p></div>
+              </li>
+            ))}
+          </ol>
+          <div className="contact-direct">
+            <span>¿Prefieres escribirnos directamente?</span>
+            <a href="mailto:guillermo1205ad@gmail.com">
+              <Mail size={17} aria-hidden="true" />
+              <span>guillermo1205ad@gmail.com</span>
+              <ArrowUpRight size={17} aria-hidden="true" />
+            </a>
+          </div>
         </div>
-
-        {/* Form Container Card */}
-        <div className="rounded-3xl glass-panel p-8 sm:p-12 shadow-2xl border border-white/[0.08] relative overflow-hidden">
-          
-          {submittedSuccess ? (
-            <div className="py-12 text-center animate-fade-in">
-              <div className="w-20 h-20 rounded-3xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto mb-6 shadow-xl shadow-emerald-950/50">
-                <CheckCircle2 className="w-10 h-10" />
+        <div className="contact-card">
+          <div className="contact-card-heading">
+            <span className="contact-card-tag">PRIMERA CONVERSACIÓN · SIN COSTO</span>
+            <h3>Empecemos por conocerte.</h3>
+            <p>Completa tus datos y cuéntanos sobre tu proyecto.</p>
+          </div>
+          <form action="https://formsubmit.co/guillermo1205ad@gmail.com" method="POST" className="contact-form" aria-describedby="contact-privacy">
+            <input type="hidden" name="_subject" value="Nueva consulta · Veritas Rendiciones" />
+            <input type="hidden" name="_template" value="table" />
+            <input type="hidden" name="_url" value="https://guillermo1205ad.github.io/veritas-rendiciones/" />
+            <input type="hidden" name="_next" value="https://guillermo1205ad.github.io/veritas-rendiciones/gracias.html" />
+            <div className="contact-honeypot" aria-hidden="true">
+              <label htmlFor="contact-website">Dejar este campo vacío</label>
+              <input id="contact-website" type="text" name="_honey" tabIndex={-1} autoComplete="off" />
+            </div>
+            <div className="contact-field">
+              <label htmlFor="contact-name">Nombre y apellido <span aria-hidden="true">*</span></label>
+              <input id="contact-name" name="Nombre" type="text" autoComplete="name" placeholder="Tu nombre completo" maxLength={150} required />
+            </div>
+            <div className="contact-field-row">
+              <div className="contact-field">
+                <label htmlFor="contact-email">Correo electrónico <span aria-hidden="true">*</span></label>
+                <input id="contact-email" name="email" type="email" autoComplete="email" placeholder="nombre@organizacion.cl" maxLength={254} required />
               </div>
-              <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3 tracking-tight">
-                Solicitud Registrada Exitosamente
-              </h3>
-              <p className="text-slate-300 text-sm max-w-md mx-auto mb-8 leading-relaxed">
-                Hemos registrado los datos de tu proyecto. Los socios consultores{' '}
-                <strong className="text-white">Guillermo Peralta</strong> y{' '}
-                <strong className="text-white">Matías Cotroneo</strong> revisarán tus antecedentes y te contactarán dentro de las próximas 24 horas hábiles.
-              </p>
-              <div className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl bg-[#090d16] border border-white/[0.08] text-xs font-mono text-indigo-300">
-                <Lock className="w-4 h-4 text-emerald-400" />
-                <span>Acuerdo de Confidencialidad y Secreto Profesional (NDA) garantizado</span>
+              <div className="contact-field">
+                <label htmlFor="contact-phone">Teléfono <small>Opcional</small></label>
+                <input id="contact-phone" name="Teléfono" type="tel" autoComplete="tel" placeholder="+56 9 1234 5678" maxLength={40} />
               </div>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {errorMessage && (
-                <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-900/60 text-rose-300 text-xs flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
-                  <span>{errorMessage}</span>
-                </div>
-              )}
-
-              {/* Funding Agency Selector Pills */}
-              <div>
-                <label className="block text-[11px] font-mono uppercase tracking-wider text-slate-400 font-bold mb-3">
-                  Organismo Financiador del Proyecto:
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2">
-                  {['CORFO', 'ANID', 'FIA', 'GORE', 'SERCOTEC', 'OTRO'].map((agency) => (
-                    <button
-                      type="button"
-                      key={agency}
-                      onClick={() => setFormData({ ...formData, funding_agency: agency })}
-                      className={`py-2 px-3 rounded-xl text-xs font-semibold transition-all border ${
-                        formData.funding_agency === agency
-                          ? 'bg-indigo-600 text-white border-indigo-500 shadow-md shadow-indigo-600/30'
-                          : 'bg-[#090d16] text-slate-400 border-white/[0.06] hover:text-white hover:border-white/[0.15]'
-                      }`}
-                    >
-                      {agency}
-                    </button>
+            <div className="contact-field-row">
+              <div className="contact-field">
+                <label htmlFor="contact-organization">Organización <span aria-hidden="true">*</span></label>
+                <input id="contact-organization" name="Organización" type="text" autoComplete="organization" placeholder="Empresa o institución" maxLength={200} required />
+              </div>
+              <div className="contact-field">
+                <label htmlFor="contact-agency">Organismo financiador</label>
+                <select id="contact-agency" name="Organismo financiador" defaultValue="">
+                  <option value="">Selecciona una opción</option>
+                  {['CORFO', 'ANID', 'FIA', 'GORE', 'SERCOTEC', 'Otro', 'Por definir'].map((agency) => (
+                    <option key={agency} value={agency}>{agency}</option>
                   ))}
+                </select>
+              </div>
+            </div>
+            <div className="contact-field">
+              <label htmlFor="contact-message">¿En qué podemos ayudarte?</label>
+              <textarea id="contact-message" name="Mensaje" rows={3} maxLength={5000} placeholder="Cuéntanos en qué etapa está tu proyecto y qué necesitas resolver." />
+            </div>
+            <details className="contact-project-details">
+              <summary>Agregar datos del proyecto <Plus size={16} aria-hidden="true" /></summary>
+              <div className="contact-extra-fields">
+                <div className="contact-field">
+                  <label htmlFor="contact-project">Nombre o código del proyecto <small>Opcional</small></label>
+                  <input id="contact-project" name="Proyecto" type="text" placeholder="Nombre o código de referencia" maxLength={250} />
+                </div>
+                <div className="contact-field-row">
+                  <div className="contact-field">
+                    <label htmlFor="contact-budget">Presupuesto <small>Opcional</small></label>
+                    <select id="contact-budget" name="Presupuesto (CLP)" defaultValue="">
+                      <option value="">Selecciona un rango</option>
+                      <option value="Hasta $40.000.000">Hasta $40.000.000</option>
+                      <option value="Más de $40.000.000 y hasta $120.000.000">$40.000.001 a $120.000.000</option>
+                      <option value="Más de $120.000.000 y hasta $300.000.000">$120.000.001 a $300.000.000</option>
+                      <option value="Más de $300.000.000">Más de $300.000.000</option>
+                      <option value="Por definir">Por definir</option>
+                    </select>
+                  </div>
+                  <div className="contact-field">
+                    <label htmlFor="contact-rut">RUT de la entidad <small>Opcional</small></label>
+                    <input id="contact-rut" name="RUT de la entidad" type="text" placeholder="76.123.456-7" maxLength={20} />
+                  </div>
                 </div>
               </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
-                {/* Org Name */}
-                <div>
-                  <label className="block text-[11px] font-mono font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                    Organización o Empresa *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Ej. Austral Biotech SpA / Universidad..."
-                    value={formData.organization_name}
-                    onChange={(e) => setFormData({ ...formData, organization_name: e.target.value })}
-                    className="w-full px-4 py-3.5 rounded-xl bg-[#090d16] border border-white/[0.08] text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 transition-colors"
-                  />
-                </div>
-
-                {/* RUT */}
-                <div>
-                  <label className="block text-[11px] font-mono font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                    RUT Entidad (Opcional)
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Ej. 76.892.410-K"
-                    value={formData.rut}
-                    onChange={(e) => setFormData({ ...formData, rut: e.target.value })}
-                    className="w-full px-4 py-3.5 rounded-xl bg-[#090d16] border border-white/[0.08] text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 transition-colors"
-                  />
-                </div>
-
-                {/* Contact Name */}
-                <div>
-                  <label className="block text-[11px] font-mono font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                    Nombre del Contacto *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Ej. Dra. Camila Valenzuela"
-                    value={formData.contact_name}
-                    onChange={(e) => setFormData({ ...formData, contact_name: e.target.value })}
-                    className="w-full px-4 py-3.5 rounded-xl bg-[#090d16] border border-white/[0.08] text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 transition-colors"
-                  />
-                </div>
-
-                {/* Contact Email */}
-                <div>
-                  <label className="block text-[11px] font-mono font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                    Correo Electrónico Institucional *
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    placeholder="contacto@organizacion.cl"
-                    value={formData.contact_email}
-                    onChange={(e) => setFormData({ ...formData, contact_email: e.target.value })}
-                    className="w-full px-4 py-3.5 rounded-xl bg-[#090d16] border border-white/[0.08] text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 transition-colors"
-                  />
-                </div>
-
-                {/* Phone */}
-                <div>
-                  <label className="block text-[11px] font-mono font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                    Teléfono / WhatsApp
-                  </label>
-                  <input
-                    type="tel"
-                    placeholder="+56 9 8412 9901"
-                    value={formData.contact_phone}
-                    onChange={(e) => setFormData({ ...formData, contact_phone: e.target.value })}
-                    className="w-full px-4 py-3.5 rounded-xl bg-[#090d16] border border-white/[0.08] text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 transition-colors"
-                  />
-                </div>
-
-                {/* Estimated Budget */}
-                <div>
-                  <label className="block text-[11px] font-mono font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                    Rango de Presupuesto Aprobado
-                  </label>
-                  <select
-                    value={formData.estimated_budget}
-                    onChange={(e) => setFormData({ ...formData, estimated_budget: e.target.value })}
-                    className="w-full px-4 py-3.5 rounded-xl bg-[#090d16] border border-white/[0.08] text-white text-sm focus:outline-none focus:border-indigo-500 transition-colors"
-                  >
-                    <option value="Menos de $40.000.000">Hasta $40.000.000 (Semilla / Líneas menores)</option>
-                    <option value="$40.000.000 - $120.000.000">$40.000.000 a $120.000.000 (FIA, Innova)</option>
-                    <option value="$120.000.000 - $300.000.000">$120.000.000 a $300.000.000 (Crea y Valida, Fondef)</option>
-                    <option value="Más de $300.000.000">Más de $300.000.000 (Centros, GORE, Consorcios)</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Project Title / Code */}
-              <div>
-                <label className="block text-[11px] font-mono font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                  Título o Código del Proyecto (Opcional)
-                </label>
-                <input
-                  type="text"
-                  placeholder="Ej. FIA-PYT-2025-XX / Desarrollo de Bioplásticos..."
-                  value={formData.project_title}
-                  onChange={(e) => setFormData({ ...formData, project_title: e.target.value })}
-                  className="w-full px-4 py-3.5 rounded-xl bg-[#090d16] border border-white/[0.08] text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 transition-colors"
-                />
-              </div>
-
-              {/* Current Situation */}
-              <div>
-                <label className="block text-[11px] font-mono font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                  Situación Actual o Desafío de Rendición
-                </label>
-                <textarea
-                  rows={3}
-                  placeholder="Cuéntanos brevemente: ¿Proyecto recién adjudicado? ¿Acumulación de comprobantes por rendir? ¿Observaciones recibidas por subsanar?"
-                  value={formData.current_situation}
-                  onChange={(e) => setFormData({ ...formData, current_situation: e.target.value })}
-                  className="w-full px-4 py-3.5 rounded-xl bg-[#090d16] border border-white/[0.08] text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 transition-colors"
-                />
-              </div>
-
-              {/* Submit Button */}
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full py-4 rounded-xl bg-gradient-to-r from-indigo-500 via-indigo-600 to-sky-500 hover:from-indigo-600 hover:to-sky-600 text-white font-semibold text-sm sm:text-base shadow-xl shadow-indigo-500/25 transition-all hover:scale-[1.01] flex items-center justify-center gap-2.5 disabled:opacity-50"
-                >
-                  <Send className="w-4 h-4" />
-                  <span>{isSubmitting ? 'Procesando Solicitud...' : 'Enviar Solicitud de Diagnóstico'}</span>
-                </button>
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400 pt-4 border-t border-white/[0.06]">
-                <div className="flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-emerald-400" />
-                  <span>Confidencialidad absoluta bajo acuerdo de secreto profesional</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-indigo-400" />
-                  <span>Respuesta garantizada en menos de 24 horas</span>
-                </div>
-              </div>
-            </form>
-          )}
-
+            </details>
+            <button className="contact-submit" type="submit">Solicitar mi diagnóstico <ArrowRight size={19} aria-hidden="true" /></button>
+            <p id="contact-privacy" className="contact-privacy">
+              Los campos con * son obligatorios. Usaremos estos datos para responder a tu consulta.
+              Evita incluir información sensible o documentos de tu proyecto.
+            </p>
+          </form>
         </div>
-
       </div>
     </section>
   );
-};
+}
